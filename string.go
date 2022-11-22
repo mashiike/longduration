@@ -25,7 +25,7 @@ func DurationString(d time.Duration, optFns ...func(*DuraitonStringOptions)) str
 	remining := d
 	if remining.Seconds() < 0 {
 		fmt.Fprint(&builder, "-")
-		remining = remining.Abs()
+		remining = -remining
 	}
 	var years, weeks uint64
 	if opts.ShowYear {
