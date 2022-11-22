@@ -14,10 +14,6 @@ func TestParseDurationSuccess(t *testing.T) {
 		expected time.Duration
 	}{
 		{
-			str:      "1",
-			expected: time.Minute,
-		},
-		{
 			str:      "1m",
 			expected: time.Minute,
 		},
@@ -30,8 +26,28 @@ func TestParseDurationSuccess(t *testing.T) {
 			expected: 24 * time.Hour,
 		},
 		{
+			str:      "1w",
+			expected: 7 * 24 * time.Hour,
+		},
+		{
+			str:      "1y",
+			expected: 365 * 24 * time.Hour,
+		},
+		{
 			str:      "1d1m3s",
 			expected: 24*time.Hour + time.Minute + 3*time.Second,
+		},
+		{
+			str:      "1w1d1m3s",
+			expected: 7*24*time.Hour + 24*time.Hour + time.Minute + 3*time.Second,
+		},
+		{
+			str:      "1y1w1d1m3s",
+			expected: 365*24*time.Hour + 7*24*time.Hour + 24*time.Hour + time.Minute + 3*time.Second,
+		},
+		{
+			str:      "1y3w1d",
+			expected: 365*24*time.Hour + 3*7*24*time.Hour + 24*time.Hour,
 		},
 	}
 
@@ -49,6 +65,9 @@ func TestParseDurationFailed(t *testing.T) {
 		str string
 	}{
 		{
+			str: "1",
+		},
+		{
 			str: "s",
 		},
 		{
@@ -65,6 +84,12 @@ func TestParseDurationFailed(t *testing.T) {
 		},
 		{
 			str: "d",
+		},
+		{
+			str: "y",
+		},
+		{
+			str: "w",
 		},
 	}
 

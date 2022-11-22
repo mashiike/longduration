@@ -2,30 +2,38 @@ package longduration
 
 import (
 	"errors"
-	"log"
-	"strconv"
 	"time"
 )
 
 // ParseDuration parses a duration string; it differs from the standard golang package in that it allows date expressions that do not take into account daylight saving time, etc. For example, `1d` is treated as 24 hours.
 func ParseDuration(str string) (time.Duration, error) {
-	if d, err := strconv.ParseUint(str, 10, 64); err == nil {
-		log.Printf("[warn] Setting an interval without a unit is deprecated. Please write `%s` as` %sm`", str, str)
-		return time.Duration(d) * time.Minute, nil
+	years, str := trim(str, 'y', 365*24)
+	if str == "" {
+		if years == 0 {
+			return 0, errors.New("invalid format")
+		}
+		return years, nil
 	}
+	weeks, str := trim(str, 'w', 7*24)
+	if str == "" {
+		if years+weeks == 0 {
+			return 0, errors.New("invalid format")
+		}
+		return years + weeks, nil
+	}
+	days, str := trim(str, 'd', 24)
+	if str == "" {
+		if years+weeks+days == 0 {
+			return 0, errors.New("invalid format")
+		}
+		return years + weeks + days, nil
+	}
+	d, err := time.ParseDuration(str)
+	return years + weeks + days + d, err
 
-	days, parts := trimDay(str)
-	if parts != "" {
-		d, err := time.ParseDuration(parts)
-		return days + d, err
-	}
-	if days == 0 {
-		return 0, errors.New("invalid format")
-	}
-	return days, nil
 }
 
-func trimDay(str string) (time.Duration, string) {
+func trim(str string, unit rune, coefficient int64) (time.Duration, string) {
 	var val int64
 	for i, c := range str {
 		if '0' <= c && c <= '9' {
@@ -33,8 +41,8 @@ func trimDay(str string) (time.Duration, string) {
 			val = val*10 + v
 			continue
 		}
-		if c == 'd' {
-			return time.Duration(val) * 24 * time.Hour, str[i+1:]
+		if c == unit {
+			return time.Duration(val*coefficient) * time.Hour, str[i+1:]
 		}
 		return 0, str
 	}
