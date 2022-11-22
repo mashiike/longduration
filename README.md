@@ -14,6 +14,8 @@ The standard go package does not have a duration expression beyond hour due to c
 However, in actual use, I would like to see notations such as `1d`, `3d`, `23d` etc.... Therefore, we have decided to use the following expression, which does not take into account daylight saving time, leap seconds, etc.
 1d = 24hour, which does not take into account daylight saving time, leap seconds, and so on.
 
+**Note: Do not use this package if you are affected by daylight saving time zones!** 
+
 ## Requirements
   * Go 1.16 or higher. support the 3 latest versions of Go.
 
