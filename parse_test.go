@@ -14,10 +14,6 @@ func TestParseDurationSuccess(t *testing.T) {
 		expected time.Duration
 	}{
 		{
-			str:      "1",
-			expected: time.Minute,
-		},
-		{
 			str:      "1m",
 			expected: time.Minute,
 		},
@@ -48,6 +44,9 @@ func TestParseDurationFailed(t *testing.T) {
 	cases := []struct {
 		str string
 	}{
+		{
+			str: "1",
+		},
 		{
 			str: "s",
 		},
