@@ -26,8 +26,16 @@ func TestParseDurationSuccess(t *testing.T) {
 			expected: 24 * time.Hour,
 		},
 		{
+			str:      "1w",
+			expected: 7 * 24 * time.Hour,
+		},
+		{
 			str:      "1d1m3s",
 			expected: 24*time.Hour + time.Minute + 3*time.Second,
+		},
+		{
+			str:      "1w1d1m3s",
+			expected: 8*24*time.Hour + time.Minute + 3*time.Second,
 		},
 	}
 
